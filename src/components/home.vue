@@ -60,7 +60,7 @@
             color: $color-text;
             font-size: 16px;
             &:hover{
-                color: $color-yellow;
+                color: $color-text-hover;
                 font-size: 18px;
             }
             }
