@@ -5,19 +5,37 @@
             <router-link tag="div" class="logo" to="/"><img class="home" src="../assets/img/head.jpg" alt="" title="Home"></router-link>
             <router-link tag="div" class="name" to="/blog" title="Blog">TangTao</router-link>
         </div>
-        <div class="add-blog-container" title="编辑新文章">
-            <i class="el-icon-edit"></i>
+        <div class="right-container">
+            <router-link v-show="login" tag="div" to="/edit" class="add-blog-container" title="编辑新文章">
+                <i class="el-icon-edit"></i>
+            </router-link>
+            <el-button @click="centerDialogVisible = true">登录</el-button>
         </div>
-        <div class="login">
-            <img src="../assets/img/login.png"/>
-        </div>
+        <el-dialog
+            title="Login"
+            :visible.sync="centerDialogVisible"
+            width="30%"
+            center>
+            <ul>
+                <li class="account"><i class="iconfont icon-wode"></i><input type="text" placeholder="账号"/></li>
+                <li class="pwd"><i class="iconfont icon-password"></i><input type="text" placeholder="密码"/></li>
+            </ul>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="centerDialogVisible = false">登录</el-button>
+            </span>
+        </el-dialog>
       </div>
   </nav>
 </template>
 
 <script type="text/javascript">
     export default {
-        
+        data(){
+            return {
+                centerDialogVisible: false,
+                login: false
+            }
+        }
     }
 </script>
 
@@ -73,33 +91,64 @@
                     cursor: pointer;
                 }
             }
-            .add-blog-container{
+            .right-container{
                 position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
+                right: 0;
                 height: 100%;
                 display: flex;
                 align-items: center;
-                &:hover{
-                    color: $color-blue;
-                }
-                .el-icon-edit{
-                    font-size: 28px;
+                .add-blog-container{
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+                    margin-right: 20px;
+                    &:hover{
+                        color: $color-blue;
+                    }
+                    .el-icon-edit{
+                        font-size: 28px;
+                    }
                 }
             }
-            .login{
-                position: absolute;
-                right: 20px;
-                height: 100%;
-                display: flex;
-                align-items: center;
-                img{
-                    width: 25px;
-                    height: 25px;
+            .el-dialog__wrapper{
+                .el-dialog--center{
+                    div{
+                        &.el-dialog__body{
+                            padding-top: 0;
+                            li{
+                                border: 1px solid $color-blue;
+                                border-radius: 5px;
+                                height: 30px;
+                                padding: 5px;
+                                display: flex;
+                                align-items: center;
+                                input{
+                                    width: 100%;
+                                    outline: none;
+                                    height: 100%;
+                                    line-height: 30px;
+                                    margin-left: 5px;
+                                }
+                                &.account{
+                                    margin-bottom: 10px;
+                                }
+                            }
+                        }
+                        &.el-dialog__footer{
+                            padding: 10px 27px 15px;
+                            .dialog-footer{
+                                display: block;
+                                width: 100%;
+                                button{
+                                    width: 100%;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-        
     }
 </style>
 
