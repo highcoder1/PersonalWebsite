@@ -6,22 +6,24 @@
             <router-link tag="div" class="name" to="/blog" title="Blog">TangTao</router-link>
         </div>
         <div class="right-container">
-            <router-link v-show="login" tag="div" to="/edit" class="add-blog-container" title="编辑新文章">
+            <router-link v-show="editable" tag="div" to="/edit" class="add-blog-container" title="编辑新文章">
                 <i class="el-icon-edit"></i>
             </router-link>
-            <el-button @click="centerDialogVisible = true">登录</el-button>
+            <el-button @click="centerDialogVisible = true" v-show="!editable">登录</el-button>
+            <el-button @click="onLogout" v-show="editable">登出</el-button>
         </div>
         <el-dialog
             title="Login"
             :visible.sync="centerDialogVisible"
             width="30%"
             center>
+            <span class="tooltip" v-show="isMessageError">账号或密码错误!</span>
             <ul>
-                <li class="account"><i class="iconfont icon-wode"></i><input type="text" placeholder="账号"/></li>
-                <li class="pwd"><i class="iconfont icon-password"></i><input type="text" placeholder="密码"/></li>
+                <li class="account"><i class="iconfont icon-wode"></i><input type="text" placeholder="账号" v-model="name" v-on:input="onMsgChange"/></li>
+                <li class="pwd"><i class="iconfont icon-password"></i><input type="password" placeholder="密码" v-model="password" v-on:input="onMsgChange"/></li>
             </ul>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="centerDialogVisible = false">登录</el-button>
+                <el-button type="primary" @click="onLogin">登录</el-button>
             </span>
         </el-dialog>
       </div>
@@ -29,11 +31,85 @@
 </template>
 
 <script type="text/javascript">
+    import axios from 'axios';
+    import qs from 'qs';
+    import * as constants from '../config/constants';
+
     export default {
         data(){
             return {
                 centerDialogVisible: false,
-                login: false
+                editable: false,
+                name: '',
+                password: '',
+                isMessageError: false
+            }
+        },
+        mounted() {
+            this.checkLogin();
+        },
+        methods: {
+            onLogin(){
+                // console.log(`name: "${this.name}" password:"${this.password}"`);
+                let name = this.name.trim();
+                let password = this.password.trim();
+                if(name === '' || password === ''){
+                    this.isMessageError = true;
+                    return;
+                }
+                // axios.get('/api',{
+                //     params: {
+                //         name: name,
+                //         password: password
+                //     }
+                // }).then(res => {
+                //     console.log(res.data);
+                // }).catch(err => {
+                //     console.log(err);
+                // })
+                axios.post('/api/login',{
+                    name: name,
+                    password: password
+                }).then(res => {
+                    let data = res.data;
+                    if (data.status === constants.STATUS_OK) {
+                        this.centerDialogVisible = false;
+                        this.editable = true;
+                        this.name = '';
+                        this.password = '';
+                    }else if(data.status === constants.STATUS_ERR){
+                        this.isMessageError = true;
+                    }else if(data.status === constants.STATUS_SERVICE_ERR){
+                        this.$message.error('服务器端错误');
+                    }
+                }).catch(err => {
+                    console.log(err);
+                })
+
+            },
+            onLogout() {
+                axios.post('/api/logout').then(res => {
+                    if (res.data.status === constants.STATUS_OK) {
+                        this.editable = false;
+                    }else{
+                        this.$message.error("服务器未响应");
+                    }
+                }).catch(err => {
+                    console.log(err);
+                })
+            },
+            checkLogin(){
+                axios.post('/api/checkLogin').then(response => {
+                    let res = response.data;
+                    if(res.status === constants.STATUS_OK){
+                        this.editable = true;
+                    }
+                })
+            },
+            onMsgChange(){
+                if(this.name.trim() != '' && this.password.trim() != ''){
+                    this.isMessageError = false;
+                }
             }
         }
     }
@@ -48,6 +124,12 @@
         justify-content: center;
         height: $header-height;
         border-bottom: 1px solid #e7e7e7;
+        padding: 0 15px;
+        @media screen and (max-width: 768px){
+            .container{
+                width: 100%;
+            }
+        }
         @media screen and (min-width: 768px){
             .container{
                 width: 750px;
@@ -116,6 +198,10 @@
                     div{
                         &.el-dialog__body{
                             padding-top: 0;
+                            .tooltip{
+                                color:red;
+
+                            }
                             li{
                                 border: 1px solid $color-blue;
                                 border-radius: 5px;
