@@ -57,7 +57,7 @@
                     this.isMessageError = true;
                     return;
                 }
-                // axios.get('/api',{
+                // axios.get('/admins',{
                 //     params: {
                 //         name: name,
                 //         password: password
@@ -67,7 +67,7 @@
                 // }).catch(err => {
                 //     console.log(err);
                 // })
-                axios.post('/api/login',{
+                axios.post('/admins/login',{
                     name: name,
                     password: password
                 }).then(res => {
@@ -88,7 +88,7 @@
 
             },
             onLogout() {
-                axios.post('/api/logout').then(res => {
+                axios.post('/admins/logout').then(res => {
                     if (res.data.status === constants.STATUS_OK) {
                         this.editable = false;
                     }else{
@@ -99,7 +99,7 @@
                 })
             },
             checkLogin(){
-                axios.post('/api/checkLogin').then(response => {
+                axios.post('/admins/checkLogin').then(response => {
                     let res = response.data;
                     if(res.status === constants.STATUS_OK){
                         this.editable = true;
