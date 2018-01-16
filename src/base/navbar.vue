@@ -115,7 +115,6 @@
     }
 </script>
 
-
 <style lang="scss" scoped>
     @import '~style/variable.scss';
 
