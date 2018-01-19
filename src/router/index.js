@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from 'components/home'
-import Blog from 'components/blog'
+import Blogs from 'components/blogs'
 import EditBlog from 'components/edit-blog'
+import BlogView from 'components/blog-view'
 
 Vue.use(Router)
 
@@ -18,12 +19,16 @@ export default new Router({
       component: Home
     },
     {
-      path: '/blog',
-      component: Blog
+      path: '/blogs',
+      component: Blogs
     },
     {
       path: '/edit',
       component: EditBlog
+    },
+    {
+      path: '/:year/:month/:date/:title',
+      component: BlogView
     }
   ]
 })

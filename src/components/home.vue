@@ -5,14 +5,13 @@
                 <img class="img-head" src='../assets/img/head.jpg' alt="" />
             </div>
             <ul class="direct-panel">
-                <li><router-link tag="a" to="/blog">首页</router-link></li>
+                <li><router-link tag="a" to="/blogs">首页</router-link></li>
                 <li><a href="http://blog.csdn.net/highboys" target="_blank" rel="noopener noreferrer">CSDN博客</a></li>
                 <li><a href="https://github.com/highcoder1" target="_blank" rel="noopener noreferrer">Github</a></li>
             </ul>
         </div>
     </div> 
 </template>
-
 
 <script>
     export default {

@@ -119,10 +119,16 @@
     @import '~style/variable.scss';
 
     .navbar{
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 2;
         display: flex;
         justify-content: center;
         height: $header-height;
-        border-bottom: 1px solid #e7e7e7;
+        background-color: #fff;
+        box-shadow: 0 0 5px #ccc;
         padding: 0 15px;
         @media screen and (max-width: 768px){
             .container{
