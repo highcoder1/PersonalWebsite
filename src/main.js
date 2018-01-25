@@ -6,6 +6,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import 'style/index.scss'
 import MavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
+import store from './store'
 
 Vue.use(ElementUI)
 Vue.use(MavonEditor)
@@ -16,5 +17,6 @@ Vue.config.productionTip = false//阻止vue在启动时生成生产模式下的�
 new Vue({
   el: '#app',
   router,
+  store,
   render: h => h(App)//vue1.0写法： components: { App }  局部注册组件
 })

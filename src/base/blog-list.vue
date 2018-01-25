@@ -1,7 +1,10 @@
 <template>
   <div class="blog-container">
       <ul>
-          <li class="post-item" v-for="(article,index) in articles" :key="index" @click="itemClick(formatPath(article))">
+          <li class="post-item" v-for="(article,index) in displayArticles" 
+            :key="index" 
+            @click="itemClick(formatPath(article))" 
+            :title="article.title">
                 <span class="post-date">{{article.date}}</span>
                 <h3 class="post-title">{{article.title}}</h3>
           </li>
@@ -10,13 +13,9 @@
 </template>
 
 <script type="text/javascript">
+    import {mapGetters} from 'vuex';
+
     export default {
-        props: {
-            articles: {
-                type: Array,
-                default: []
-            }
-        },
         methods: {
             formatPath(article) {
                 let date = article.date,
@@ -25,28 +24,58 @@
                 dateString.push(title);
                 return `${dateString.join('/')}`;
             },
-            itemClick(article){
-                this.$emit('itemClick',article);
+            itemClick(path){
+                console.log(path);
+                this.$router.push({
+                    path: `/${path}`
+                });
             }
+        },
+        computed: {
+            ...mapGetters([
+                'filterArticles',
+                'displayArticles'
+            ])
         }
     }
 </script>
 
 <style lang="scss" scoped>
+    @import '~style/variable.scss';
+
     .blog-container{
         padding: 20px;
-        width: 67%;
         ul{
+            list-style: decimal;
             .post-item{
+                height: $blog-item-height;
+                margin-bottom: 20px;
                 cursor: pointer;
-                margin-bottom: 10px;
                 display: flex;
+                align-items: center;
+                transition: all .2s linear;
+                &:hover{
+                    transform: translate3d(10px,0,0);
+                }
+                .post-date{
+                    color: $color-date;
+                    font-size: 15px;
+                    &:before{
+                        content: '';
+                        display: inline-block;
+                        width: 8px;
+                        height: 8px;
+                        border-radius: 50%;
+                        background-color: $color-date;
+                        margin-right: 5px;
+                    }
+                }
+                .post-title{
+                    margin-left: 30px;
+                    font-size: 20px;
+                    color: $color-blue;
+                }
             }
-        }
-    }
-    @media screen and (max-width: 768px){
-        .blog-container{
-            width: 100%;
         }
     }
 </style>

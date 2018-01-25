@@ -5,7 +5,7 @@
                 <img class="img-head" src='../assets/img/head.jpg' alt="" />
             </div>
             <ul class="direct-panel">
-                <li><router-link tag="a" to="/blogs">首页</router-link></li>
+                <li><router-link tag="a" to="/blogs">我的主页</router-link></li>
                 <li><a href="http://blog.csdn.net/highboys" target="_blank" rel="noopener noreferrer">CSDN博客</a></li>
                 <li><a href="https://github.com/highcoder1" target="_blank" rel="noopener noreferrer">Github</a></li>
             </ul>
@@ -51,18 +51,23 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            width: 100%;
             li{
-            margin-bottom: 20px;
-            height: 20px;
-            line-height: 20px;
-            a{
-            color: $color-text;
-            font-size: 16px;
-            &:hover{
-                color: $color-text-hover;
-                font-size: 18px;
-            }
-            }
+                margin-bottom: 20px;
+                height: 20px;
+                line-height: 20px;
+                width: 100%;
+                a{
+                    display: block;
+                    width: 100%;
+                    text-align: center;
+                    color: $color-text;
+                    font-size: 16px;
+                &:hover{
+                    color: $color-text-hover;
+                    font-size: 18px;
+                }
+                }
             }
         }
         }

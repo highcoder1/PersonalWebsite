@@ -46,14 +46,6 @@
         padding-top: $header-height;
         .blog-container{
             padding: 20px;
-            .blog-content{
-                width: 67%;
-            }
-            @media screen and (max-width: 768px){
-                .blog-content{
-                    width: 100%;
-                }
-            }
         }
     }
 </style>
