@@ -11,6 +11,7 @@
 <script type="text/javascript">
     import Navbar from 'base/navbar';
     import axios from 'axios';
+    import {mapGetters} from 'vuex';
 
     export default {
         data() {
@@ -19,19 +20,29 @@
             }
         },
         mounted() {
-            let title = this.$route.params.title;
-            axios.get(`/articles?title=${title}`)
+            axios.get(`/articles?id=${this.isProcessingId}`)
                 .then( res => {
                     let data = res.data;
                     if(data.status !== 0){
                         this.$message.error(data.msg);
                     }else {
-                        console.log(data.doc);
-                        this.article = data.doc;
+                        this.article = this.unescapeHTML(data.doc);
                     }
                 }).catch( err => {
                     console.log(err);
                 })
+        },
+        methods: {
+            unescapeHTML(doc) {
+                let temp = document.createElement('div');
+                temp.innerHTML = doc;
+                return temp.textContent ? temp.textContent : temp.innerText;
+            }
+        },
+        computed: {
+            ...mapGetters([
+                'isProcessingId'
+            ])
         },
         components: {
             Navbar

@@ -6,6 +6,7 @@ import EditBlog from 'components/edit-blog'
 import BlogView from 'components/blog-view'
 import BlogsFilter from 'components/blogs-filter'
 import BlogList from 'base/blog-list'
+import BlogsManager from 'components/blogs-manager'
 
 Vue.use(Router)
 
@@ -26,11 +27,17 @@ export default new Router({
       children: [
         {
           path: '',
-          component: BlogList
+          component: BlogList,
+          props: true
         },
+        // {
+        //   path: ':year',
+        //   component: BlogList
+        // },
         {
           path: ':year/:month',//前面不要加'/'，否则匹配不到
-          component: BlogList
+          component: BlogList,
+          props: true
         }
       ]
     },
@@ -45,6 +52,10 @@ export default new Router({
     {
       path: '/:year/:month',
       component: BlogsFilter
+    },
+    {
+      path: '/manager',
+      component: BlogsManager
     }
   ]
 })

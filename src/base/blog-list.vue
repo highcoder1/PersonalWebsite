@@ -1,9 +1,9 @@
 <template>
   <div class="blog-container">
-      <ul>
+      <ul class="post-list">
           <li class="post-item" v-for="(article,index) in displayArticles" 
             :key="index" 
-            @click="itemClick(formatPath(article))" 
+            @click="itemClick(article)" 
             :title="article.title">
                 <span class="post-date">{{article.date}}</span>
                 <h3 class="post-title">{{article.title}}</h3>
@@ -13,9 +13,15 @@
 </template>
 
 <script type="text/javascript">
-    import {mapGetters} from 'vuex';
+    import {mapMutations} from 'vuex';
 
     export default {
+        props: {
+            displayArticles: {
+                type: Array,
+                default: []
+            }
+        },
         methods: {
             formatPath(article) {
                 let date = article.date,
@@ -24,18 +30,16 @@
                 dateString.push(title);
                 return `${dateString.join('/')}`;
             },
-            itemClick(path){
-                console.log(path);
+            itemClick(article){
+                this.setProcessingId(article.id);
+                let path = this.formatPath(article);
                 this.$router.push({
                     path: `/${path}`
                 });
-            }
-        },
-        computed: {
-            ...mapGetters([
-                'filterArticles',
-                'displayArticles'
-            ])
+            },
+            ...mapMutations({
+                setProcessingId: 'SET_PROCESSING_ID'
+            })
         }
     }
 </script>
@@ -44,9 +48,9 @@
     @import '~style/variable.scss';
 
     .blog-container{
+        margin-left: 80px;
         padding: 20px;
-        ul{
-            list-style: decimal;
+        .post-list{
             .post-item{
                 height: $blog-item-height;
                 margin-bottom: 20px;

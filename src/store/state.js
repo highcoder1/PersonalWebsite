@@ -1,7 +1,8 @@
 const state = {
     allArticles: [],
     filterArticles: [],
-    displayArticles: []
+    displayArticles: [],
+    isProcessingId: ''
 }
 
 export default state;

@@ -31,8 +31,21 @@ module.exports = {
         pathRewrite: {
           '^/articles': '/articles'
         }
+      },
+      '/temparticles/*': {
+        target: 'http://127.0.0.1:8081',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/temparticles': '/temparticles'
+        }
+      },
+      '/release/*': {
+        target: 'http://127.0.0.1:8081',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/release': '/release'
+        }
       }
-      
     },
 
     // Various Dev Server settings

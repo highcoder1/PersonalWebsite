@@ -11,14 +11,16 @@
 </template>
 
 <style lang="scss" scoped>
-    .left{
-        width: 100%;
-    }
-    .right{
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        margin-bottom: 30px;
+    @media screen and (max-width: 768px){
+        .left{
+            width: 100%;
+        }
+        .right{
+            width: 100%;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+        }
     }
     @media screen and (min-width: 768px){
         .left{
@@ -26,8 +28,9 @@
         }
         .right{
             width: 33%;
+            padding-left: 100px;
             position: fixed;
-            top: 70px;
+            top: 100px;
             right: 0;
         }
     }

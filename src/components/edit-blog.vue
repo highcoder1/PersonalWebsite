@@ -1,7 +1,7 @@
 <template>
   <div class="editor-container">
-        <el-input class="title" placeholder="subject..." v-model="title" >
-            <div slot="prepend">文章标题</div>
+        <el-input class="title" placeholder="请输入文章标题..." v-model="title" >
+            <div slot="prepend" @click="releaseArticle">发布</div>
             <div slot="append" @click="createArticle">写新文章</div>
         </el-input>
         <mavon-editor ref=md v-model="article" @imgAdd="imgAdd" @imgDel="imgDel" @save="saveArticle"/>
@@ -10,19 +10,16 @@
 
 <script type="text/javascript">
     import axios from 'axios';
+    import {mapMutations,mapGetters} from 'vuex';
 
     export default {
         data() {
             return {
                 title: '',
-                oldTitle: '',//之前的标题，用于判断标题是否修改
                 article: ''
             }
         },
         methods: {
-            // focus() {
-            //     this.oldTitle = this.title;
-            // },
             imgAdd(pos, $file){
                 console.log(pos);//      ./0
                 // 第一步.将图片上传到服务器.
@@ -54,42 +51,64 @@
                 }
                 return `${year}-${month}-${date}`;
             },
-            /**@augments
-             * value markdown语法内容
-             * render value经过解析后的html
-             */
-            saveArticle(value,render){
+            save(path,value,render) {
                 if(this.title.trim() === ''){
                     this.$message.error('请输入文章标题（不能全为空格）');
                     return;
                 }
-                let date = new Date();
-                axios.post('/articles/save',{
+                axios.post(`/${path}/save`,{
+                    id: this.isProcessingId,
                     title: this.title.trim(),
-                    oldTitle: this.oldTitle,
                     originalContent: value,
                     htmlContent: render,
                     date: this.getDate()
                 }).then(res => {
-                    console.log(res.data);
+                    let msg = res.data.msg;
                     if(res.data.status === 0){
-                        this.oldTitle = res.data.title;
+                        if(this.isProcessingId === '')this.setProcessingId(res.data.id);
                         this.$message({
-                            message: '保存成功！',
+                            message: msg,
                             type: 'success'
                         });
+                        if (path === 'release') {
+                            this.clear();
+                        }
                     }else{
-                        this.$message.error(`保存失败（${res.data.msg}）`);
+                        this.$message.error(msg);
                     }
                 }).catch(err => {
                     console.log(err);
                 })
             },
-            createArticle() {
-                this.oldTitle = '';
+            /**@augments
+             * value markdown语法内容
+             * render value经过解析后的html
+             */
+            saveArticle(value,render){
+                this.save('temparticles',value,render);
+            },
+            clear() {
+                this.setProcessingId('');
                 this.title = '';
                 this.article = '';
-            }
+            },
+            createArticle() {
+                this.clear();
+            },
+            releaseArticle() {
+                let value = document.querySelector('.auto-textarea-input').value;
+                let render = document.querySelector('.v-show-content-html').innerHTML;
+                console.log(render);
+                this.save('release',value,render);
+            },
+            ...mapMutations({
+                setProcessingId: 'SET_PROCESSING_ID'
+            })
+        },
+        computed: {
+            ...mapGetters([
+                'isProcessingId'
+            ])
         }
     }
 </script>
@@ -106,14 +125,16 @@
             top: 0;
             z-index: 1501;
             .el-input-group__prepend{
-                background-color: $color-warning;
+                background-color: $color-blue;
                 color: #fff;
+                cursor: pointer;
             }
             .el-input__inner{
-                font-size: 18px;
+                font-size: 16px;
+                font-family: 'Georgia',Helvetica,Arial,sans-serif;
             }
             .el-input-group__append{
-                background-color: $color-blue;
+                background-color: $color-danger;
                 color: #fff;
                 cursor: pointer;
             }

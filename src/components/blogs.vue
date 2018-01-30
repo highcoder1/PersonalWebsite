@@ -1,29 +1,32 @@
 <template>
   <div class="blog-main">
     <navbar></navbar>
-    <left-right-container>
+    <left-right-container class="center">
       <div class="body" slot="left">
-        <router-view></router-view>
+        <router-view :displayArticles="displayArticles"></router-view>
         <el-pagination
           class="pagination"
           background
           layout="prev, pager, next"
           @current-change="pageChange"
+          :page-size="pageSize"
           :total="filterArticles.length">
         </el-pagination>
       </div>
       <div slot="right">
-        <ul>
+        <h2 class="archives">Archives</h2>
+        <ul class="mulu-list">
           <li v-for="(item,index) in mulu" 
               :key="index"
               @click="muluClick(item[0])"
               class="mulu-item"
               >
-              {{item[0]}} ({{item[1]}})
+              {{item[0]}} (<span class="number">{{item[1]}}</span>)
           </li>
         </ul>
       </div>
     </left-right-container>
+    <foot class="foot"></foot>
   </div>
 </template>
 
@@ -33,12 +36,14 @@
   import BlogList from 'base/blog-list';
   import LeftRightContainer from 'components/left-right-container';
   import {mapMutations,mapGetters} from 'vuex';
+  import Foot from 'base/foot';
+  import {SINGLE_PAGE_NUM} from '../config/constants';
 
   export default {
     data() {
       return {
-        articles: [],
-        mulu: []
+        mulu: [],
+        pageSize: SINGLE_PAGE_NUM
       }
     },
     mounted() {
@@ -58,7 +63,7 @@
     },
     methods: {
       muluClick(date) {
-        this.setFilterArticles(this.filteArticles(this.filterArticles,date));
+        this.setFilterArticles(this.filteArticles(this.allArticles,date));
         let path = date.split('-').join('/');
         this.$router.push({
           path: `/blogs/${path}`
@@ -80,13 +85,16 @@
     },
     computed: {
       ...mapGetters([
-        'filterArticles'
+        'allArticles',
+        'filterArticles',
+        'displayArticles'
       ])
     },
     components: {
       Navbar,
       BlogList,
-      LeftRightContainer
+      LeftRightContainer,
+      Foot
     }
   }
 </script>
@@ -96,21 +104,42 @@
   @import '~style/variable.scss';
 
   .blog-main{
-    padding-top: 50px;
+    position: relative;
+    min-height: 100%;
+    padding: 50px 0 $footer-height;
+    box-sizing: border-box;
     background-color: $color-blog-theme;
-    .pagination{
-      display: flex;
-      justify-content: center;
-      margin-bottom: 30px;
-    }
-    .mulu-item{
-      font-size: 14px;
-      cursor: pointer;
-      margin-bottom: 5px;
-      transition: all .2s linear;
-      &:hover{
-          transform: translate3d(5px,0,0);
+    .center{
+      .pagination{
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+      }
+      .right{
+        width: 100%;
+        .archives{
+          max-width: 240px;
+          font-size: 26px;
           color: $color-date;
+          border-bottom: 1px dotted #eee8d3;
+          padding-bottom: 10px;
+          margin-bottom: 10px;
+        }
+        .mulu-list{
+          .mulu-item{
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            transition: all .2s linear;
+            color: $color-date;
+            .number{
+              color: $color-blue;
+            }
+            &:hover{
+                transform: translate3d(5px,0,0);
+            }
+          }
+        }
       }
     }
   }

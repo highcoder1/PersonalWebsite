@@ -11,6 +11,9 @@ const mutations = {
     },
     [types.SET_DISPLAY_ARTICLES](state, num) {
         state.displayArticles = state.filterArticles.slice((num - 1) * SINGLE_PAGE_NUM, num * SINGLE_PAGE_NUM);
+    },
+    [types.SET_PROCESSING_ID](state, id) {
+        state.isProcessingId = id;
     }
 }
 
